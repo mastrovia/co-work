@@ -13,7 +13,7 @@ import { spaceTypes, cities, statuses } from '@/lib/data/spaces';
 
 export function SpacesFilters() {
   return (
-    <div className="mb-6 space-y-4">
+    <div className="space-y-4">
       {/* Search and Filters Row */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center">
         {/* Search Input */}

@@ -20,11 +20,13 @@ export default function SpacesPage() {
         }}
       />
 
-      {/* Filters Section */}
-      <SpacesFilters />
-
       {/* White Background Container with Full Height */}
-      <div className="flex min-h-[calc(100vh-280px)] flex-col rounded-lg bg-white">
+      <div className="flex min-h-[calc(100vh-240px)] flex-col rounded-lg bg-white">
+        {/* Filters Section - Inside white container */}
+        <div className="border-b p-6">
+          <SpacesFilters />
+        </div>
+
         {/* Table Section - Grows to fill available space */}
         <div className="flex-1 overflow-auto p-6">
           <SpacesTable spaces={mockSpaces} />

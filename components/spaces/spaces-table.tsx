@@ -11,7 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { CoworkingSpace } from '@/lib/data/spaces';
-import { Edit, Eye, MoreVertical } from 'lucide-react';
+import { Edit, Eye, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface SpacesTableProps {
@@ -92,8 +92,12 @@ export function SpacesTable({ spaces }: SpacesTableProps) {
                   <Button variant="ghost" size="icon" className="h-8 w-8">
                     <Eye className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <MoreVertical className="h-4 w-4" />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-destructive hover:text-destructive"
+                  >
+                    <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
               </TableCell>
