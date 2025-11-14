@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { AppLayout } from '@/components/layout/app-layout';
 import { Header } from '@/components/layout/header';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -14,16 +14,66 @@ import { LocationTab } from '@/components/spaces/form-tabs/location-tab';
 import { ContactTab } from '@/components/spaces/form-tabs/contact-tab';
 import { AdditionalTab } from '@/components/spaces/form-tabs/additional-tab';
 
+const tabs = [
+  'basic-info',
+  'amenities',
+  'pricing',
+  'media',
+  'location',
+  'contact',
+  'additional',
+] as const;
+
 export default function NewSpacePage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('basic-info');
-  const [spaceType, setSpaceType] = useState<string>('');
+  const basicInfoValidateRef = useRef<(() => Promise<boolean>) | null>(null);
+
+  const currentTabIndex = tabs.indexOf(activeTab);
+  const isLastTab = currentTabIndex === tabs.length - 1;
+  const isFirstTab = currentTabIndex === 0;
+
+  const handleNext = async () => {
+    // Validate current tab before proceeding
+    let isValid = true;
+
+    if (activeTab === 'basic-info' && basicInfoValidateRef.current) {
+      isValid = await basicInfoValidateRef.current();
+    }
+    // Add validation for other tabs as needed
+
+    if (!isValid) {
+      return;
+    }
+
+    if (currentTabIndex < tabs.length - 1) {
+      setActiveTab(tabs[currentTabIndex + 1]);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentTabIndex > 0) {
+      setActiveTab(tabs[currentTabIndex - 1]);
+    }
+  };
 
   const handleSaveDraft = () => {
     console.log('Save as draft');
   };
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
+    // Validate current tab before publishing
+    let isValid = true;
+
+    if (activeTab === 'basic-info' && basicInfoValidateRef.current) {
+      isValid = await basicInfoValidateRef.current();
+    }
+    // Add validation for other tabs as needed
+
+    if (!isValid) {
+      return;
+    }
+
     console.log('Publish space');
   };
 
@@ -94,10 +144,7 @@ export default function NewSpacePage() {
           {/* Tab Content - Fixed Height */}
           <div className="flex-1 overflow-auto">
             <TabsContent value="basic-info" className="m-0 h-full p-6">
-              <BasicInfoTab
-                spaceType={spaceType}
-                onSpaceTypeChange={setSpaceType}
-              />
+              <BasicInfoTab validateFormRef={basicInfoValidateRef} />
             </TabsContent>
 
             <TabsContent value="amenities" className="m-0 h-full p-6">
@@ -105,7 +152,7 @@ export default function NewSpacePage() {
             </TabsContent>
 
             <TabsContent value="pricing" className="m-0 h-full p-6">
-              <PricingTab spaceType={spaceType} />
+              <PricingTab />
             </TabsContent>
 
             <TabsContent value="media" className="m-0 h-full p-6">
@@ -128,19 +175,37 @@ export default function NewSpacePage() {
 
         {/* Fixed Bottom Actions */}
         <div className="flex items-center justify-between border-t bg-white px-6 py-4">
-          <Button variant="ghost" onClick={() => router.push('/spaces')}>
-            Cancel
-          </Button>
           <div className="flex items-center gap-3">
-            <Button variant="outline" onClick={handleSaveDraft}>
-              Save as Draft
+            <Button variant="ghost" onClick={() => router.push('/spaces')}>
+              Cancel
             </Button>
-            <Button
-              className="bg-green-600 text-white hover:bg-green-700"
-              onClick={handlePublish}
-            >
-              Publish Space
-            </Button>
+            {!isFirstTab && (
+              <Button variant="outline" onClick={handlePrevious}>
+                Previous
+              </Button>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            {isLastTab ? (
+              <>
+                <Button variant="outline" onClick={handleSaveDraft}>
+                  Save as Draft
+                </Button>
+                <Button
+                  className="bg-green-600 text-white hover:bg-green-700"
+                  onClick={handlePublish}
+                >
+                  Publish Space
+                </Button>
+              </>
+            ) : (
+              <Button
+                className="bg-green-600 text-white hover:bg-green-700"
+                onClick={handleNext}
+              >
+                Next
+              </Button>
+            )}
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   Building2,
   Users,
+  UserPlus,
   Calendar,
   BarChart3,
   Settings,
@@ -28,6 +29,11 @@ const navigationItems = [
     name: 'Users',
     href: '/users',
     icon: Users,
+  },
+  {
+    name: 'Leads',
+    href: '/leads',
+    icon: UserPlus,
   },
   {
     name: 'Bookings',

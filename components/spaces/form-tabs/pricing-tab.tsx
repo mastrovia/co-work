@@ -4,10 +4,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 
 interface PricingTabProps {
-  spaceType: string;
+  spaceType?: string;
 }
 
-export function PricingTab({ spaceType }: PricingTabProps) {
+export function PricingTab({ spaceType = '' }: PricingTabProps) {
   const isCoworkingSpace = spaceType === 'coworking-space';
   const isVirtualOffice = spaceType === 'virtual-office';
   const isPrivateOffice = spaceType === 'private-office';
