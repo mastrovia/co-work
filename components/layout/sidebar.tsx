@@ -8,7 +8,6 @@ import {
   Users,
   UserPlus,
   Calendar,
-  BarChart3,
   Settings,
   LogOut,
 } from 'lucide-react';
@@ -39,11 +38,6 @@ const navigationItems = [
     name: 'Bookings',
     href: '/bookings',
     icon: Calendar,
-  },
-  {
-    name: 'Analytics',
-    href: '/analytics',
-    icon: BarChart3,
   },
   {
     name: 'Settings',

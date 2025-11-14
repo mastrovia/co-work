@@ -1,44 +1,40 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { LucideIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Card } from '@/components/ui/card';
+import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
 
 interface StatCardProps {
   title: string;
   value: string | number;
-  change?: {
-    value: number;
-    label: string;
-  };
-  icon: LucideIcon;
+  change?: string;
+  trend?: 'up' | 'down';
 }
 
-export function StatCard({ title, value, change, icon: Icon }: StatCardProps) {
-  const isPositive = change ? change.value >= 0 : true;
+export function StatCard({ title, value, change, trend }: StatCardProps) {
+  const isPositive = trend === 'up';
 
   return (
-    <Card>
-      <CardContent className="p-6">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <p className="text-sm font-medium text-muted-foreground">{title}</p>
-            <h3 className="mt-2 text-3xl font-bold tracking-tight">{value}</h3>
-            {change && (
-              <p
-                className={cn(
-                  'mt-2 text-sm font-medium',
-                  isPositive ? 'text-accent' : 'text-destructive'
-                )}
+    <Card className="p-6">
+      <div className="flex flex-col">
+        <p className="text-sm text-gray-600">{title}</p>
+        <div className="mt-2 flex items-end justify-between">
+          <h3 className="text-3xl font-semibold text-gray-900">{value}</h3>
+          {change && (
+            <div className="flex items-center gap-1">
+              {isPositive ? (
+                <ArrowUpRight className="h-4 w-4 text-green-600" />
+              ) : (
+                <ArrowDownRight className="h-4 w-4 text-red-600" />
+              )}
+              <span
+                className={`text-sm font-medium ${
+                  isPositive ? 'text-green-600' : 'text-red-600'
+                }`}
               >
-                {isPositive ? '+' : ''}
-                {change.value}% {change.label}
-              </p>
-            )}
-          </div>
-          <div className="rounded-lg bg-primary p-3">
-            <Icon className="h-6 w-6 text-primary-foreground" />
-          </div>
+                {change}
+              </span>
+            </div>
+          )}
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 }
