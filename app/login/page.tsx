@@ -3,17 +3,20 @@
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Building2, Eye, EyeOff } from 'lucide-react';
+import { Building2, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { loginSchema, type LoginFormData } from '@/lib/validations/auth';
+import { authApi } from '@/lib/api/auth';
+import { AxiosError } from 'axios';
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState<string>('');
   const router = useRouter();
-  const [loginError, setLoginError] = useState<string | null>(null);
 
   const {
     register,
@@ -25,23 +28,24 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    setLoginError(null);
     try {
-      const result = await signIn('credentials', {
-        redirect: false,
-        email: data.email,
-        password: data.password,
-      });
+      setLoginError('');
+      const response = await authApi.login(data);
 
-      if (result?.error) {
-        setLoginError('Invalid email or password');
-        return;
+      if (response.success) {
+        // Redirect to dashboard on successful login
+        router.push('/');
       }
-
-      router.push('/');
-      router.refresh();
     } catch (error) {
-      setLoginError('An error occurred. Please try again.');
+      if (error instanceof AxiosError) {
+        const errorMessage =
+          error.response?.data?.message ||
+          error.response?.data?.error ||
+          'Invalid email or password. Please try again.';
+        setLoginError(errorMessage);
+      } else {
+        setLoginError('An unexpected error occurred. Please try again.');
+      }
     }
   };
 
@@ -64,6 +68,14 @@ export default function LoginPage() {
           <h2 className="mb-6 text-xl font-semibold text-gray-900">
             Sign in to your account
           </h2>
+
+          {/* Error Message */}
+          {loginError && (
+            <div className="mb-4 flex items-start gap-2 rounded-md border border-red-200 bg-red-50 p-3">
+              <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-600" />
+              <p className="text-sm text-red-600">{loginError}</p>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             {loginError && (
