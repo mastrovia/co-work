@@ -42,6 +42,17 @@ export default function SettingsPage() {
       return;
     }
 
+    // Validate password complexity
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+    if (!passwordRegex.test(newPassword)) {
+      setMessage({
+        type: 'error',
+        text: 'Password must contain uppercase, lowercase, number, and special character (@$!%*?&)',
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
       await api.put('/settings/password', {
@@ -167,7 +178,8 @@ export default function SettingsPage() {
                 </button>
               </div>
               <p className="text-xs text-neutral-500">
-                Must be at least 8 characters
+                8+ characters with uppercase, lowercase, number &amp; special
+                char
               </p>
             </div>
 

@@ -53,9 +53,9 @@ export default function LoginPage() {
       {/* Left Side - Branding */}
       <div className="hidden w-1/2 bg-emerald-600 lg:flex lg:flex-col lg:justify-between lg:p-12">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
+          {/* <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
             <Building2 className="h-6 w-6 text-white" />
-          </div>
+          </div> */}
           <span className="text-xl font-bold text-white">CoWork</span>
         </div>
 
