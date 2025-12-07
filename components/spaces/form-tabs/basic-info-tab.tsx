@@ -11,11 +11,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  spaceTypeOptions,
-  cityOptions,
-  categoryOptions,
-} from '@/lib/validations/space';
+import { spaceTypeOptions, categoryOptions } from '@/lib/validations/space';
+import { api } from '@/lib/api';
 
 export function BasicInfoTab() {
   const {
@@ -24,6 +21,27 @@ export function BasicInfoTab() {
     watch,
     formState: { errors },
   } = useFormContext();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [locations, setLocations] = React.useState<any[]>([]);
+  const [isLoadingLocations, setIsLoadingLocations] = React.useState(true);
+
+  React.useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const { data } = await api.get('/locations');
+        if (data.success) {
+          setLocations(data.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch locations:', error);
+      } finally {
+        setIsLoadingLocations(false);
+      }
+    };
+
+    fetchLocations();
+  }, []);
 
   const formValues = watch();
   const shortDescLength = watch('shortDescription')?.length || 0;
@@ -109,11 +127,22 @@ export function BasicInfoTab() {
               <SelectValue placeholder="Select city" />
             </SelectTrigger>
             <SelectContent>
-              {cityOptions.map(option => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
+              {isLoadingLocations ? (
+                <div className="p-2 text-sm text-center text-muted-foreground">
+                  Loading cities...
+                </div>
+              ) : locations.length > 0 ? (
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                locations.map((location: any) => (
+                  <SelectItem key={location._id} value={location._id}>
+                    {location.name}
+                  </SelectItem>
+                ))
+              ) : (
+                <div className="p-2 text-sm text-center text-muted-foreground">
+                  No cities found
+                </div>
+              )}
             </SelectContent>
           </Select>
           {errors.city && (

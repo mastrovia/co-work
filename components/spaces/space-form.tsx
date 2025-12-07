@@ -42,17 +42,25 @@ export function SpaceForm({ initialData, isEditing = false }: SpaceFormProps) {
   const methods = useForm<SpaceFormData>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(spaceSchema) as any,
-    defaultValues: initialData || {
-      spaceName: '',
-      spaceType: '',
-      city: '',
-      spaceCategory: '',
-      shortDescription: '',
-      longDescription: '',
-      amenities: [],
-      images: [],
-      status: 'pending',
-    },
+    defaultValues: initialData
+      ? {
+          ...initialData,
+          city:
+            typeof initialData.city === 'object'
+              ? initialData.city?._id
+              : initialData.city,
+        }
+      : {
+          spaceName: '',
+          spaceType: '',
+          city: '',
+          spaceCategory: '',
+          shortDescription: '',
+          longDescription: '',
+          amenities: [],
+          images: [],
+          status: 'pending',
+        },
     mode: 'onChange',
   });
 

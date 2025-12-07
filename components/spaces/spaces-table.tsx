@@ -101,7 +101,9 @@ export function SpacesTable({ spaces, onDelete, isLoading }: SpacesTableProps) {
                   {space.spaceType}
                 </Badge>
               </TableCell>
-              <TableCell>{space.city}</TableCell>
+              <TableCell>
+                {typeof space.city === 'object' ? space.city?.name : space.city}
+              </TableCell>
               <TableCell>-</TableCell>
               <TableCell>
                 {space.pricing?.hotDesk ? `₹${space.pricing.hotDesk}/mo` : '-'}
