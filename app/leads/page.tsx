@@ -24,6 +24,7 @@ interface LeadsStats {
 function LeadsPageContent() {
   const searchParams = useSearchParams();
   const [leads, setLeads] = useState<Lead[]>([]);
+  const [allLeads, setAllLeads] = useState<Lead[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [stats, setStats] = useState<LeadsStats>({
     total: 0,
@@ -72,14 +73,15 @@ function LeadsPageContent() {
       // Fetch all leads to compute stats (or you could have a /leads/stats endpoint)
       const { data } = await api.get('/leads?limit=1000');
       if (data.success) {
-        const allLeads = data.data as Lead[];
+        const fetchedLeads = data.data as Lead[];
+        setAllLeads(fetchedLeads);
         setStats({
-          total: allLeads.length,
-          new: allLeads.filter(l => l.status === 'new').length,
-          contacted: allLeads.filter(l => l.status === 'contacted').length,
-          qualified: allLeads.filter(l => l.status === 'qualified').length,
-          converted: allLeads.filter(l => l.status === 'converted').length,
-          lost: allLeads.filter(l => l.status === 'lost').length,
+          total: fetchedLeads.length,
+          new: fetchedLeads.filter(l => l.status === 'new').length,
+          contacted: fetchedLeads.filter(l => l.status === 'contacted').length,
+          qualified: fetchedLeads.filter(l => l.status === 'qualified').length,
+          converted: fetchedLeads.filter(l => l.status === 'converted').length,
+          lost: fetchedLeads.filter(l => l.status === 'lost').length,
         });
       }
     } catch (error) {
@@ -113,6 +115,63 @@ function LeadsPageContent() {
     }
   };
 
+  const exportToCSV = () => {
+    if (allLeads.length === 0) {
+      alert('No leads to export');
+      return;
+    }
+
+    // Define CSV headers
+    const headers = [
+      'Lead ID',
+      'Name',
+      'Email',
+      'Phone',
+      'Enquired For',
+      'Space Type',
+      'Number of Seats',
+      'Location',
+      'Status',
+      'Message',
+      'Date',
+    ];
+
+    // Convert leads to CSV rows
+    const rows = allLeads.map(lead => [
+      lead.leadId || lead.id,
+      lead.name,
+      lead.email,
+      lead.phone,
+      lead.enquiredFor,
+      lead.spaceType,
+      lead.numberOfSeats || '',
+      lead.location || '',
+      lead.status,
+      (lead.message || '').replace(/"/g, '""'), // Escape quotes
+      lead.date || lead.createdAt || '',
+    ]);
+
+    // Build CSV content
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(',')),
+    ].join('\n');
+
+    // Create and download file
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute(
+      'download',
+      `leads-report-${new Date().toISOString().split('T')[0]}.csv`
+    );
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const statCards = [
     {
       label: 'Total Enquiries',
@@ -141,7 +200,7 @@ function LeadsPageContent() {
         action={{
           label: 'Export Report',
           icon: Download,
-          onClick: () => console.log('Export report'),
+          onClick: exportToCSV,
           className: 'bg-green-500 text-white hover:bg-green-600',
         }}
       />
