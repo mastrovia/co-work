@@ -188,6 +188,21 @@ export default function LoginPage() {
           </p>
         </div>
       </div>
+
+      {/* Fixed Footer Branding */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 flex h-10 items-center justify-center bg-white/80 backdrop-blur-sm">
+        <p className="text-xs text-neutral-400">
+          Powered by{' '}
+          <a
+            href="https://mastrovia.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-neutral-500 transition-colors hover:text-emerald-600"
+          >
+            mastrovia.com
+          </a>
+        </p>
+      </div>
     </div>
   );
 }
