@@ -111,14 +111,14 @@ export default function DashboardPage() {
         breadcrumbs={[{ label: 'Dashboard' }]}
       />
 
-      <div className="space-y-8">
+      <div className="space-y-5">
         {/* Hero Stats */}
         <div className="grid gap-px overflow-hidden rounded-2xl border bg-neutral-200 sm:grid-cols-2 lg:grid-cols-4">
           <div className="bg-white p-6">
             <span className="text-xs font-medium uppercase tracking-wider text-neutral-500">
               Spaces
             </span>
-            <p className="mt-2 text-4xl font-light tabular-nums">
+            <p className="mt-2 text-4xl font-semibold tabular-nums">
               {overview?.totalSpaces || 0}
             </p>
             <p className="mt-3 text-sm text-neutral-600">
@@ -137,7 +137,7 @@ export default function DashboardPage() {
             <span className="text-xs font-medium uppercase tracking-wider text-neutral-500">
               Leads
             </span>
-            <p className="mt-2 text-4xl font-light tabular-nums">
+            <p className="mt-2 text-4xl font-semibold tabular-nums">
               {overview?.totalLeads || 0}
             </p>
             <p className="mt-3 text-sm text-neutral-600">
@@ -156,7 +156,7 @@ export default function DashboardPage() {
             <span className="text-xs font-medium uppercase tracking-wider text-neutral-500">
               Locations
             </span>
-            <p className="mt-2 text-4xl font-light tabular-nums">
+            <p className="mt-2 text-4xl font-semibold tabular-nums">
               {overview?.totalLocations || 0}
             </p>
             <p className="mt-3 text-sm text-neutral-600">Cities in Kerala</p>
@@ -166,7 +166,7 @@ export default function DashboardPage() {
             <span className="text-xs font-medium uppercase tracking-wider text-neutral-500">
               Conversion
             </span>
-            <p className="mt-2 text-4xl font-light tabular-nums">
+            <p className="mt-2 text-4xl font-semibold tabular-nums">
               {overview?.conversionRate || '0%'}
             </p>
             <p className="mt-3 text-sm text-neutral-600">
