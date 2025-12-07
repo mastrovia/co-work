@@ -7,8 +7,10 @@ import { Header } from '@/components/layout/header';
 import { SpacesFilters } from '@/components/spaces/spaces-filters';
 import { SpacesTable } from '@/components/spaces/spaces-table';
 import { api } from '@/lib/api';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Building2, Plus } from 'lucide-react';
 import { ISpace } from '@/types';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 function SpacesContent() {
   const searchParams = useSearchParams();
@@ -43,20 +45,42 @@ function SpacesContent() {
     }
   };
 
-  return (
-    <div className="flex min-h-[calc(100vh-240px)] flex-col rounded-lg bg-white">
-      {/* Filters Section - Inside white container */}
-      <div className="border-b p-6">
-        <SpacesFilters />
+  if (isLoading) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-neutral-400" />
       </div>
+    );
+  }
 
-      {/* Table Section - Grows to fill available space */}
-      <div className="flex-1 overflow-auto p-6">
-        <SpacesTable
-          spaces={spaces}
-          onDelete={handleDelete}
-          isLoading={isLoading}
-        />
+  if (spaces.length === 0) {
+    return (
+      <div className="flex h-64 flex-col items-center justify-center rounded-2xl border border-dashed border-neutral-200 bg-neutral-50">
+        <Building2 className="h-10 w-10 text-neutral-300" />
+        <p className="mt-3 text-sm font-medium text-neutral-600">
+          No spaces yet
+        </p>
+        <p className="mt-1 text-sm text-neutral-400">
+          Create your first coworking space
+        </p>
+        <Link href="/spaces/create" className="mt-4">
+          <Button variant="outline" size="sm">
+            <Plus className="mr-2 h-4 w-4" />
+            Add Space
+          </Button>
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Filters */}
+      <SpacesFilters />
+
+      {/* Table */}
+      <div className="overflow-hidden rounded-2xl border border-neutral-200">
+        <SpacesTable spaces={spaces} onDelete={handleDelete} />
       </div>
     </div>
   );
@@ -68,20 +92,19 @@ export default function SpacesPage() {
   return (
     <AppLayout>
       <Header
-        title="Coworking Space Management"
-        description="Create, list, and manage coworking spaces, virtual offices, and private offices"
-        breadcrumbs={[{ label: 'Dashboard' }, { label: 'Coworking Spaces' }]}
+        title="Coworking Spaces"
+        description="Manage your coworking spaces, virtual offices, and private offices"
+        breadcrumbs={[{ label: 'Dashboard', href: '/' }, { label: 'Spaces' }]}
         action={{
-          label: 'Add New Space',
+          label: 'Add Space',
           onClick: () => router.push('/spaces/create'),
         }}
       />
 
-      {/* White Background Container with Full Height */}
       <Suspense
         fallback={
-          <div className="flex h-[400px] items-center justify-center rounded-lg bg-white">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          <div className="flex h-64 items-center justify-center">
+            <Loader2 className="h-6 w-6 animate-spin text-neutral-400" />
           </div>
         }
       >

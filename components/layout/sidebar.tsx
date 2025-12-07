@@ -52,10 +52,10 @@ export function Sidebar() {
     <aside className="fixed left-0 top-0 z-40 hidden h-screen w-60 border-r border-neutral-200 bg-white md:block">
       <div className="flex h-full flex-col">
         {/* Logo/Brand */}
-        <div className="flex h-16 items-center gap-3 px-5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600">
+        <div className="flex h-16 items-center gap-3 px-5 border-b border-neutral-200">
+          {/* <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600">
             <Building2 className="h-5 w-5 text-white" />
-          </div>
+          </div> */}
           <div>
             <h1 className="text-sm font-bold text-neutral-900">CoWork</h1>
             <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-400">

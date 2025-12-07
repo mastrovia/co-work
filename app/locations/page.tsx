@@ -95,7 +95,7 @@ export default function LocationsPage() {
               className="group overflow-hidden rounded-2xl border border-neutral-200 bg-white transition-shadow hover:shadow-md"
             >
               {/* Image */}
-              <div className="relative h-66 bg-neutral-100">
+              <div className="relative h-72 bg-neutral-100">
                 {location.image ? (
                   <Image
                     src={location.image}

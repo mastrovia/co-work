@@ -36,8 +36,8 @@ export default function EditSpacePage() {
   if (isLoading) {
     return (
       <AppLayout>
-        <div className="flex h-[80vh] items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+        <div className="flex h-[60vh] items-center justify-center">
+          <Loader2 className="h-6 w-6 animate-spin text-neutral-400" />
         </div>
       </AppLayout>
     );
@@ -46,18 +46,20 @@ export default function EditSpacePage() {
   return (
     <AppLayout>
       <Header
-        title="Edit Coworking Space"
-        description={`Update details for ${space?.spaceName || 'Space'}`}
+        title="Edit Space"
+        description={
+          space?.spaceName
+            ? `Editing ${space.spaceName}`
+            : 'Update space details'
+        }
         breadcrumbs={[
-          { label: 'Dashboard' },
-          { label: 'Coworking Spaces', href: '/spaces' },
-          { label: 'Edit Space' },
+          { label: 'Dashboard', href: '/' },
+          { label: 'Spaces', href: '/spaces' },
+          { label: 'Edit' },
         ]}
       />
 
-      <div className="mx-auto max-w-7xl">
-        {space && <SpaceForm initialData={space} isEditing />}
-      </div>
+      {space && <SpaceForm initialData={space} isEditing />}
     </AppLayout>
   );
 }
