@@ -1,5 +1,7 @@
 'use client';
 
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,6 +12,8 @@ import { loginSchema, type LoginFormData } from '@/lib/validations/auth';
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   const {
     register,
@@ -21,10 +25,24 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    // TODO: Implement actual login logic
-    console.log('Login data:', data);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    setLoginError(null);
+    try {
+      const result = await signIn('credentials', {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+      });
+
+      if (result?.error) {
+        setLoginError('Invalid email or password');
+        return;
+      }
+
+      router.push('/');
+      router.refresh();
+    } catch (error) {
+      setLoginError('An error occurred. Please try again.');
+    }
   };
 
   return (
@@ -48,6 +66,12 @@ export default function LoginPage() {
           </h2>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            {loginError && (
+              <div className="rounded-md bg-red-50 p-3 text-sm text-red-600">
+                {loginError}
+              </div>
+            )}
+
             {/* Email Field */}
             <div className="space-y-1.5">
               <label
